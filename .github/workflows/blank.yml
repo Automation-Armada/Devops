@@ -1,44 +1,32 @@
-name: Unified DevOps Workflow
-
+name: Enviar mensaje a Discord
 on:
-  repository_dispatch:
-    types: [notify-discord]
+  workflow_run:
+    workflows: ["Ejemplo de GitHub Actions"]
+    types:
+      - completed
 
 jobs:
-  notify-discord:
+  enviar-mensaje:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Trigger Discord Notification
+    steps:
+      - name: Obtener resultado del primer workflow
+        id: obtener-resultado
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.TEST_REPO_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            await github.repos.createDispatchEvent({
-              owner: '${{ github.repository_owner }}',
-              repo: '${{ github.event.client_payload.repo }}',
-              event_type: 'notify-discord',
-              client_payload: {}
-            })
+            const mensaje = ${{ toJson(needs.build.outputs.mensaje) }};
+            return mensaje;
 
       - name: Enviar mensaje a Discord
         if: always()
         run: |
-          event="${{ github.event_name }}"
-          repo="${{ github.repository }}"
-          ref="${{ github.ref }}"
-          workflow="${{ github.workflow }}"
-          author="${{ github.actor }}"
-          commit_url="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-          commit_message="${{ github.event.head_commit.message }}"
-          
-          mensaje="Nuevo pull request"
+          mensaje="${{ steps.obtener-resultado.outputs.resultado }}"
           color=65280  
           solucion="Ninguna solución específica proporcionada"
-          repo_url="https://github.com/$repo"
-          pipeline_url="https://github.com/$repo/actions/runs/${{ github.run_id }}"
-          message="{\"username\": \"GitHub Actions\", \"avatar_url\": \"https://github.com/github.png\", \"embeds\": [{\"title\": \"$mensaje\", \"color\": $color, \"fields\": [{\"name\": \"Pipeline\", \"value\": \"[Ir al pipeline]($pipeline_url)\"}, {\"name\": \"Sugerencia\", \"value\": \"$solucion\"}, {\"name\": \"Detalles del Evento\", \"value\": \"Evento: $event\\nRepositorio: $repo\\nRef: $ref\\nFlujo de trabajo: $workflow\\nAutor: $author\\nMensaje del Commit: $commit_message\\n[Ver commit]($commit_url)\"}]}]}"
+          repo_url="https://github.com/$GITHUB_REPOSITORY"
+          pipeline_url="$repo_url/actions/runs/$GITHUB_RUN_ID"
+          message="{\"username\": \"GitHub Actions\", \"avatar_url\": \"https://github.com/github.png\", \"embeds\": [{\"title\": \"Nuevo mensaje desde GitHub Actions\", \"color\": $color, \"fields\": [{\"name\": \"Pipeline\", \"value\": \"[Ir al pipeline]($pipeline_url)\"}, {\"name\": \"Sugerencia\", \"value\": \"$solucion\"}, {\"name\": \"Mensaje\", \"value\": \"$mensaje\"}]}]}"
           
-          curl -X POST -H 'Content-Type: application/json' -d "$message" https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
+          curl -X POST -H 'Content-Type: application/json' -d "$message" https://discord.com/api/webhooks/1243269132460363807/MNMmEyqEm8TAclOPDP3D5GJz388lybSwudkuKtcfAnRjIjxCNPeQOg3Cx48-i-P4lhXy
