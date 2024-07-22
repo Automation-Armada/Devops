@@ -1,12 +1,9 @@
-# .github/workflows/devops.yml (en el repositorio devops)
-
 name: DevOps Workflow
 
 on:
-  push
+  push:
     branches:
-      - main  # o la rama que desees
-
+      - main  
 jobs:
   trigger-tests:
     runs-on: ubuntu-latest
