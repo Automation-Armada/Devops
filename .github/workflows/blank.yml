@@ -6,9 +6,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout repository A
         uses: actions/checkout@v2
+        with:
+          repository: Automation-Armada/PactumJS-TS-Cucucumber  # Ajusta esto al nombre de usuario/organización y nombre de repo de repoA
+          token: ${{ secrets.REPO_A_TOKEN }}  # Asegúrate de tener acceso con el token adecuado
+
       - name: Install dependencies
         run: npm install
+        working-directory: .  # Ajusta esto al directorio donde está el package.json de repoA
+
       - name: Run tests
         run: npm test
+        working-directory: .  # Ajusta esto al directorio donde está el package.json de repoA
