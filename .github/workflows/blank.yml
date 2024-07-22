@@ -12,5 +12,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.TEST_REPO_TOKEN }}  # Token para acceder al repo test
-          repository: Automation-Armada/PactumJS-TS-Cucumber
+          repository: PactumJS-TS-Cucumber
           event-type: run-tests
