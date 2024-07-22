@@ -1,19 +1,21 @@
-name: Run tests on repository dispatch  # Nombre del flujo de trabajo
+name: Run tests on repository dispatch
 
 on:
-  repository_dispatch:  # Configura el evento que desencadena este flujo de trabajo
-    types: [run-tests]  # Este flujo de trabajo se activará cuando se envíe un evento 'repository_dispatch' con el tipo 'run-tests'
+  repository_dispatch:
+    types: [run-tests]
 
 jobs:
-  test:  # Define un trabajo llamado 'test'
-    runs-on: ubuntu-latest  # Especifica que este trabajo se ejecutará en un entorno Ubuntu más reciente
-    
-    steps:  # Define los pasos a seguir en este trabajo
-      - name: Checkout repository  # Paso para clonar el repositorio
-        uses: actions/checkout@v2  # Usa la acción oficial de GitHub para clonar el repositorio
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: Automation-Armada/PactumJS-TS-Cucucumber  # Repositorio que contiene package.json
+          path: ./Devops  # Ruta relativa donde se clonará el repositorio
 
-      # - name: Install dependencies  # Paso para instalar las dependencias
-      #   run: npm install  # Ejecuta el comando 'npm install' para instalar las dependencias del proyecto
+      - name: Install dependencies
+        run: npm install --prefix ./Devops  # Instalar dependencias en el directorio clonado
 
-      - name: Run tests  # Paso para ejecutar las pruebas
-        run: echo "jknjkjkn"  # Ejecuta el comando 'npm test' para ejecutar las pruebas del proyecto
+      - name: Run tests
+        run: npm test --prefix ./Devops  # Ejecutar pruebas en el directorio clonado
