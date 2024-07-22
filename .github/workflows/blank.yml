@@ -1,16 +1,14 @@
-name: DevOps Workflow
-
+name: Run tests on repository dispatch
 on:
-  push:
-    branches:
-      - main  
+  repository_dispatch:
+    types: [run-tests]
 jobs:
-  trigger-tests:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger test workflow in test repo
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.TEST_REPO_TOKEN }}  # Token para acceder al repo test
-          repository: PactumJS-TS-Cucumber
-          event-type: run-tests
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
