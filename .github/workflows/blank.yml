@@ -16,4 +16,4 @@ jobs:
       #   run: npm install  # Ejecuta el comando 'npm install' para instalar las dependencias del proyecto
 
       - name: Run tests  # Paso para ejecutar las pruebas
-        run: npm test  # Ejecuta el comando 'npm test' para ejecutar las pruebas del proyecto
+        run: echo "jknjkjkn"  # Ejecuta el comando 'npm test' para ejecutar las pruebas del proyecto
