@@ -1,0 +1,19 @@
+# .github/workflows/devops.yml (en el repositorio devops)
+
+name: DevOps Workflow
+
+on:
+  push:
+    branches:
+      - main  # o la rama que desees
+
+jobs:
+  trigger-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger test workflow in test repo
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.TEST_REPO_TOKEN }}  # Token para acceder al repo test
+          repository: test/repo
+          event-type: run-tests
