@@ -1,49 +1,12 @@
-name: Dispatched Workflow
-
+name: Repository Dispatch
 on:
   repository_dispatch:
-    types: [dispatch-event]
-
+    types: [my-event]
 jobs:
-  send_discord_message:
+  myEvent:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Git repository
-        uses: actions/checkout@v2
-
-      - name: Prepare message
-        run: |
-          message='{
-            "username": "GitHub Actions",
-            "avatar_url": "https://github.com/github.png",
-            "embeds": [{
-              "title": "'"$INPUT_MENSAJE"'",
-              "color": '"$INPUT_COLOR"',
-              "fields": [{
-                "name": "Pipeline",
-                "value": "[Ir al pipeline]('$INPUT_PIPELINE_URL')"
-              }, {
-                "name": "Sugerencia",
-                "value": "'"$INPUT_SOLUCION"'"
-              }, {
-                "name": "Detalles del Evento",
-                "value": "Evento: '$INPUT_EVENT'\\nRepositorio: '$INPUT_REPO'\\nRef: '$INPUT_REF'\\nFlujo de trabajo: '$INPUT_WORKFLOW'\\nAutor: '$INPUT_AUTHOR'\\nMensaje del Commit: '$INPUT_COMMIT_MESSAGE'\\n[Ver commit]('$INPUT_COMMIT_URL')"
-              }]
-            }]
-          }'
-
-      - name: Send message to Discord
-        run: |
-          curl -X POST -H 'Content-Type: application/json' -d "$message" https://discord.com/api/webhooks/1243269132460363807/MNMmEyqEm8TAclOPDP3D5GJz388lybSwudkuKtcfAnRjIjxCNPeQOg3Cx48-i-P4lhXy
-        env:
-          INPUT_MENSAJE: ${{ github.event.client_payload.mensaje }}
-          INPUT_COLOR: ${{ github.event.client_payload.color }}
-          INPUT_SOLUCION: ${{ github.event.client_payload.solucion }}
-          INPUT_REPO: ${{ github.event.client_payload.repo_url }}
-          INPUT_PIPELINE_URL: ${{ github.event.client_payload.pipeline_url }}
-          INPUT_EVENT: ${{ github.event.client_payload.event }}
-          INPUT_REF: ${{ github.event.client_payload.ref }}
-          INPUT_WORKFLOW: ${{ github.event.client_payload.workflow }}
-          INPUT_AUTHOR: ${{ github.event.client_payload.author }}
-          INPUT_COMMIT_MESSAGE: ${{ github.event.client_payload.commit_message }}
-          INPUT_COMMIT_URL: ${{ github.event.client_payload.commit_url }}
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.client_payload.ref }}
+      - run: echo ${{ github.event.client_payload.sha }}
