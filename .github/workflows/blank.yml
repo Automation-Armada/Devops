@@ -25,6 +25,12 @@ jobs:
           echo "Color: ${{ github.event.client_payload.color }}" >> output.txt
           echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}" >> output.txt
 
+      - name: Upload output.txt as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: output.txt
+
       - name: Send output file to Discord webhook
         run: |
           curl -X POST -H "Content-Type: application/json" -d @output.txt https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
