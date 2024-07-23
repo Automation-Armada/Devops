@@ -10,80 +10,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: main  # Ajusta la rama según tu configuración
+          ref: main  # Asegúrate de ajustar la rama según tus necesidades
 
-      - name: Capture client payload values
-        id: capture_payload
+      - name: Echo client payload values
         run: |
-          echo "::set-output name=event::${{ github.event.client_payload.event }}"
-          echo "::set-output name=repository::${{ github.event.client_payload.repo }}"
-          echo "::set-output name=ref::${{ github.event.client_payload.ref }}"
-          echo "::set-output name=workflow::${{ github.event.client_payload.workflow }}"
-          echo "::set-output name=author::${{ github.event.client_payload.author }}"
-          echo "::set-output name=commit_url::${{ github.event.client_payload.commit_url }}"
-          echo "::set-output name=commit_message::${{ github.event.client_payload.commit_message }}"
-          echo "::set-output name=mensaje::${{ github.event.client_payload.mensaje }}"
-          echo "::set-output name=color::${{ github.event.client_payload.color }}"
-          echo "::set-output name=pipeline_url::${{ github.event.client_payload.pipeline_url }}"
-
-      - name: Send message to Discord webhook
-        run: |
-          # Construir el mensaje JSON con variables de GitHub Actions
-          MESSAGE='{
-            "username": "GitHub Actions",
-            "avatar_url": "https://github.com/github.png",
-            "embeds": [
-              {
-                "title": "New pull request",
-                "color": 65280,
-                "fields": [
-                  {
-                    "name": "Pipeline",
-                    "value": "[Ir al pipeline](${{ steps.capture_payload.outputs.pipeline_url }})"
-                  },
-                  {
-                    "name": "Sugerencia",
-                    "value": "${{ steps.capture_payload.outputs.mensaje }}"
-                  },
-                  {
-                    "name": "Detalles del Evento",
-                    "value": "Evento: ${{ steps.capture_payload.outputs.event }}\\nRepositorio: ${{ steps.capture_payload.outputs.repository }}\\nRef: ${{ steps.capture_payload.outputs.ref }}\\nFlujo de trabajo: ${{ steps.capture_payload.outputs.workflow }}\\nAutor: ${{ steps.capture_payload.outputs.author }}\\nMensaje del Commit: ${{ steps.capture_payload.outputs.commit_message }}\\n[Ver commit](${{ steps.capture_payload.outputs.commit_url }})"
-                  }
-                ]
-              }
-            ]
-          }'
-
-          # Escapar las comillas dobles dentro del JSON
-          MESSAGE=$(echo $MESSAGE | sed 's/"/\\"/g')
-
-          # Enviar el mensaje JSON al webhook de Discord
-          curl -X POST -H 'Content-Type: application/json' -d "$MESSAGE" https://discord.com/api/webhooks/1243269132460363807/MNMmEyqEm8TAclOPDP3D5GJz388lybSwudkuKtcfAnRjIjxCNPeQOg3Cx48-i-P4lhXy
-# name: Repository Dispatch
-# on:
-#   repository_dispatch:
-#     types: [my-event]
-
-# jobs:
-#   myEvent:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
-#         with:
-#           ref: main  
-
-#       - name: Echo client payload values
-#         run: |
-#           echo "Event: ${{ github.event.client_payload.event }}"
-#           echo "Repository: ${{ github.event.client_payload.repo }}"
-#           echo "Ref: ${{ github.event.client_payload.ref }}"
-#           echo "Workflow: ${{ github.event.client_payload.workflow }}"
-#           echo "Author: ${{ github.event.client_payload.author }}"
-#           echo "Commit URL: ${{ github.event.client_payload.commit_url }}"
-#           echo "Commit Message: ${{ github.event.client_payload.commit_message }}"
-#           echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
-#           echo "Color: ${{ github.event.client_payload.color }}"
-#           echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"
-#         # echo "Solucion: ${{ github.event.client_payload.solucion }}"
-#         # echo "Repository URL: ${{ github.event.client_payload.repo_url }}"
+          echo "Event: ${{ github.event.client_payload.event }}"
+          echo "Repository: ${{ github.event.client_payload.repo }}"
+          echo "Ref: ${{ github.event.client_payload.ref }}"
+          echo "Workflow: ${{ github.event.client_payload.workflow }}"
+          echo "Author: ${{ github.event.client_payload.author }}"
+          echo "Commit URL: ${{ github.event.client_payload.commit_url }}"
+          echo "Commit Message: ${{ github.event.client_payload.commit_message }}"
+          echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
+          echo "Color: ${{ github.event.client_payload.color }}"
+          echo "Solucion: ${{ github.event.client_payload.solucion }}"
+          echo "Repository URL: ${{ github.event.client_payload.repo_url }}"
+          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"
+           curl -X POST -H 'Content-Type: application/json' -d "$message" https://discord.com/api/webhooks/1243269132460363807/MNMmEyqEm8TAclOPDP3D5GJz388lybSwudkuKtcfAnRjIjxCNPeQOg3Cx48-i-P4lhXy
