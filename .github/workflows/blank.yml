@@ -1,41 +1,3 @@
-name: Repository Dispatch
-on:
-  repository_dispatch:
-    types: [my-event]
-
-jobs:
-  myEvent:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          ref: main  # Asegúrate de ajustar la rama según tus necesidades
-
-      - name: Create JSON file
-        run: |
-          echo '{
-            "Event": "${{ github.event.client_payload.event }}",
-            "Repository": "${{ github.event.client_payload.repo }}",
-            "Ref": "${{ github.event.client_payload.ref }}",
-            "Workflow": "${{ github.event.client_payload.workflow }}",
-            "Author": "${{ github.event.client_payload.author }}",
-            "CommitURL": "${{ github.event.client_payload.commit_url }}",
-            "CommitMessage": "${{ github.event.client_payload.commit_message }}",
-            "Mensaje": "${{ github.event.client_payload.mensaje }}",
-            "Color": "${{ github.event.client_payload.color }}",
-            "PipelineURL": "${{ github.event.client_payload.pipeline_url }}"
-          }' > data.json
-
-      - name: Upload data.json as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: data
-          path: data.json
-
-      - name: Send JSON data to Discord webhook
-        run: |
-          curl -X POST -H "Content-Type: application/json" -d @data.json https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
 # name: Repository Dispatch
 # on:
 #   repository_dispatch:
@@ -50,15 +12,71 @@ jobs:
 #         with:
 #           ref: main  # Asegúrate de ajustar la rama según tus necesidades
 
-#       - name: Echo client payload values
+#       - name: Create JSON file
 #         run: |
-#           echo "Event: ${{ github.event.client_payload.event }}"
-#           echo "Repository: ${{ github.event.client_payload.repo }}"
-#           echo "Ref: ${{ github.event.client_payload.ref }}"
-#           echo "Workflow: ${{ github.event.client_payload.workflow }}"
-#           echo "Author: ${{ github.event.client_payload.author }}"
-#           echo "Commit URL: ${{ github.event.client_payload.commit_url }}"
-#           echo "Commit Message: ${{ github.event.client_payload.commit_message }}"
-#           echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
-#           echo "Color: ${{ github.event.client_payload.color }}"
-#           echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"  
+#           echo '{
+#             "Event": "${{ github.event.client_payload.event }}",
+#             "Repository": "${{ github.event.client_payload.repo }}",
+#             "Ref": "${{ github.event.client_payload.ref }}",
+#             "Workflow": "${{ github.event.client_payload.workflow }}",
+#             "Author": "${{ github.event.client_payload.author }}",
+#             "CommitURL": "${{ github.event.client_payload.commit_url }}",
+#             "CommitMessage": "${{ github.event.client_payload.commit_message }}",
+#             "Mensaje": "${{ github.event.client_payload.mensaje }}",
+#             "Color": "${{ github.event.client_payload.color }}",
+#             "PipelineURL": "${{ github.event.client_payload.pipeline_url }}"
+#           }' > data.json
+
+#       - name: Upload data.json as artifact
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: data
+#           path: data.json
+
+#       - name: Send JSON data to Discord webhook
+#         run: |
+#           curl -X POST -H "Content-Type: application/json" -d @data.json https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
+name: Repository Dispatch
+on:
+  repository_dispatch:
+    types: [my-event]
+
+jobs:
+  myEvent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main  # Asegúrate de ajustar la rama según tus necesidades
+
+      - name: Echo client payload values
+        run: |
+          echo "Event: ${{ github.event.client_payload.event }}"
+          echo "Repository: ${{ github.event.client_payload.repo }}"
+          echo "Ref: ${{ github.event.client_payload.ref }}"
+          echo "Workflow: ${{ github.event.client_payload.workflow }}"
+          echo "Author: ${{ github.event.client_payload.author }}"
+          echo "Commit URL: ${{ github.event.client_payload.commit_url }}"
+          echo "Commit Message: ${{ github.event.client_payload.commit_message }}"
+          echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
+          echo "Color: ${{ github.event.client_payload.color }}"
+          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"  
+
+      - name: Send message to discord
+        run: |
+          event="${{ github.event.client_payload.event }}"
+          repo="${{ github.event.client_payload.repo }}"
+          ref="${{ github.event.client_payload.ref }}"
+          workflow="${{ github.event.client_payload.workflow }}"
+          author="${{ github.event.client_payload.author }}"
+          commit_url="${{ github.event.client_payload.commit_url }}"
+          commit_message="${{ github.event.client_payload.commit_message }}"
+          mensaje="${{ github.event.client_payload.mensaje }}"
+          color="${{ github.event.client_payload.color }}"
+          solucion="Ninguna solución específica proporcionada"
+          pipeline_url="${{ github.event.client_payload.pipeline_url }}" 
+          message="{\"username\": \"GitHub Actions\", \"avatar_url\": \"https://github.com/github.png\", \"embeds\": [{\"title\": \"$mensaje\", \"color\": $color, \"fields\": [{\"name\": \"Pipeline\", \"value\": \"[Ir al pipeline]($pipeline_url)\"}, {\"name\": \"Sugerencia\", \"value\": \"$solucion\"}, {\"name\": \"Detalles del Evento\", \"value\": \"Evento: $event\\nRepositorio: $repo\\nRef: $ref\\nFlujo de trabajo: $workflow\\nAutor: $author\\nMensaje del Commit: $commit_message\\n[Ver commit]($commit_url)\"}]}]}"
+           
+          curl -X POST -H 'Content-Type: application/json' -d "$message" https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
+
