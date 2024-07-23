@@ -12,16 +12,45 @@ jobs:
         with:
           ref: main  # Asegúrate de ajustar la rama según tus necesidades
 
-      - name: Echo client payload values
+      - name: Create output file
         run: |
-          echo "Event: ${{ github.event.client_payload.event }}"
-          echo "Repository: ${{ github.event.client_payload.repo }}"
-          echo "Ref: ${{ github.event.client_payload.ref }}"
-          echo "Workflow: ${{ github.event.client_payload.workflow }}"
-          echo "Author: ${{ github.event.client_payload.author }}"
-          echo "Commit URL: ${{ github.event.client_payload.commit_url }}"
-          echo "Commit Message: ${{ github.event.client_payload.commit_message }}"
-          echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
-          echo "Color: ${{ github.event.client_payload.color }}"
-          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"  
-          curl -X POST -H 'Content-Type: application/json' https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
+          echo "Event: ${{ github.event.client_payload.event }}" > output.txt
+          echo "Repository: ${{ github.event.client_payload.repo }}" >> output.txt
+          echo "Ref: ${{ github.event.client_payload.ref }}" >> output.txt
+          echo "Workflow: ${{ github.event.client_payload.workflow }}" >> output.txt
+          echo "Author: ${{ github.event.client_payload.author }}" >> output.txt
+          echo "Commit URL: ${{ github.event.client_payload.commit_url }}" >> output.txt
+          echo "Commit Message: ${{ github.event.client_payload.commit_message }}" >> output.txt
+          echo "Mensaje: ${{ github.event.client_payload.mensaje }}" >> output.txt
+          echo "Color: ${{ github.event.client_payload.color }}" >> output.txt
+          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}" >> output.txt
+
+      - name: Send output file to Discord webhook
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d @output.txt https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
+# name: Repository Dispatch
+# on:
+#   repository_dispatch:
+#     types: [my-event]
+
+# jobs:
+#   myEvent:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+#         with:
+#           ref: main  # Asegúrate de ajustar la rama según tus necesidades
+
+#       - name: Echo client payload values
+#         run: |
+#           echo "Event: ${{ github.event.client_payload.event }}"
+#           echo "Repository: ${{ github.event.client_payload.repo }}"
+#           echo "Ref: ${{ github.event.client_payload.ref }}"
+#           echo "Workflow: ${{ github.event.client_payload.workflow }}"
+#           echo "Author: ${{ github.event.client_payload.author }}"
+#           echo "Commit URL: ${{ github.event.client_payload.commit_url }}"
+#           echo "Commit Message: ${{ github.event.client_payload.commit_message }}"
+#           echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
+#           echo "Color: ${{ github.event.client_payload.color }}"
+#           echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"  
