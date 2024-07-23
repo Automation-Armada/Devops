@@ -48,7 +48,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: main  # Asegúrate de ajustar la rama según tus necesidades
+          ref: main  
 
       - name: Echo client payload values
         run: |
