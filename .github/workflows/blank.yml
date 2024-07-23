@@ -12,28 +12,30 @@ jobs:
         with:
           ref: main  # Asegúrate de ajustar la rama según tus necesidades
 
-      - name: Create output file
+      - name: Create JSON file
         run: |
-          echo "Event: ${{ github.event.client_payload.event }}" > output.txt
-          echo "Repository: ${{ github.event.client_payload.repo }}" >> output.txt
-          echo "Ref: ${{ github.event.client_payload.ref }}" >> output.txt
-          echo "Workflow: ${{ github.event.client_payload.workflow }}" >> output.txt
-          echo "Author: ${{ github.event.client_payload.author }}" >> output.txt
-          echo "Commit URL: ${{ github.event.client_payload.commit_url }}" >> output.txt
-          echo "Commit Message: ${{ github.event.client_payload.commit_message }}" >> output.txt
-          echo "Mensaje: ${{ github.event.client_payload.mensaje }}" >> output.txt
-          echo "Color: ${{ github.event.client_payload.color }}" >> output.txt
-          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}" >> output.txt
+          echo '{
+            "Event": "${{ github.event.client_payload.event }}",
+            "Repository": "${{ github.event.client_payload.repo }}",
+            "Ref": "${{ github.event.client_payload.ref }}",
+            "Workflow": "${{ github.event.client_payload.workflow }}",
+            "Author": "${{ github.event.client_payload.author }}",
+            "CommitURL": "${{ github.event.client_payload.commit_url }}",
+            "CommitMessage": "${{ github.event.client_payload.commit_message }}",
+            "Mensaje": "${{ github.event.client_payload.mensaje }}",
+            "Color": "${{ github.event.client_payload.color }}",
+            "PipelineURL": "${{ github.event.client_payload.pipeline_url }}"
+          }' > data.json
 
-      - name: Upload output.txt as artifact
+      - name: Upload data.json as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: output
-          path: output.txt
+          name: data
+          path: data.json
 
-      - name: Send output file to Discord webhook
+      - name: Send JSON data to Discord webhook
         run: |
-          curl -X POST -H "Content-Type: application/json" -d @output.txt https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
+          curl -X POST -H "Content-Type: application/json" -d @data.json https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
 # name: Repository Dispatch
 # on:
 #   repository_dispatch:
