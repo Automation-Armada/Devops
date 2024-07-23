@@ -23,6 +23,5 @@ jobs:
           echo "Commit Message: ${{ github.event.client_payload.commit_message }}"
           echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
           echo "Color: ${{ github.event.client_payload.color }}"
-          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"
-          message="{\"username\": \"GitHub Actions\", \"avatar_url\": \"https://github.com/github.png\"}"  
-          curl -X POST -H 'Content-Type: application/json' https://discord.com/api/webhooks/1243269132460363807/MNMmEyqEm8TAclOPDP3D5GJz388lybSwudkuKtcfAnRjIjxCNPeQOg3Cx48-i-P4lhXy
+          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"  
+          curl -X POST -H 'Content-Type: application/json' https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
