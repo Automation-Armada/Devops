@@ -62,7 +62,6 @@ jobs:
           echo "Mensaje: ${{ github.event.client_payload.mensaje }}"
           echo "Color: ${{ github.event.client_payload.color }}"
           echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"  
-          echo "Pipeline URL: ${{ github.event.client_payload.pipeline_url }}"
           echo "Pull Request URL: ${{ github.event.client_payload.pull_request_url }}"
 
       - name: Send message to discord
@@ -78,7 +77,8 @@ jobs:
           color="${{ github.event.client_payload.color }}"
           solucion="Ninguna solución específica proporcionada"
           pipeline_url="${{ github.event.client_payload.pipeline_url }}" 
-          message="{\"username\": \"GitHub Actions\", \"avatar_url\": \"https://github.com/github.png\", \"embeds\": [{\"title\": \"$mensaje\", \"color\": $color, \"fields\": [{\"name\": \"Pipeline\", \"value\": \"[Ir al pipeline]($pipeline_url)\"}, {\"name\": \"Sugerencia\", \"value\": \"$solucion\"}, {\"name\": \"Detalles del Evento\", \"value\": \"Evento: $event\\nRepositorio: $repo\\nRef: $ref\\nFlujo de trabajo: $workflow\\nAutor: $author\\nMensaje del Commit: $commit_message\\n[Ver commit]($commit_url)\"}]}]}"
+          pull_request_url: ${{ github.event.client_payload.pull_request_url }}"
+          message="{\"username\": \"GitHub Actions\", \"avatar_url\": \"https://github.com/github.png\", \"embeds\": [{\"title\": \"$mensaje\", \"color\": $color, \"fields\": [{\"name\": \"Pull Request\", \"value\": \"[Ir al pull request]($pull_request_url)\"}, {\"name\": \"Sugerencia\", \"value\": \"$solucion\"}, {\"name\": \"Detalles del Evento\", \"value\": \"Evento: $event\\nRepositorio: $repo\\nRef: $ref\\nFlujo de trabajo: $workflow\\nAutor: $author\\nMensaje del Commit: $commit_message\\n[Ver commit]($commit_url)\"}]}]}"
            
           curl -X POST -H 'Content-Type: application/json' -d "$message" https://discord.com/api/webhooks/1247924987877392495/EC0Ahcm-VSjZA21AfPAM0DrE2qha9iiCvClGEHjZNyk7U_abysiEPrbnhT4jaOtKqlMZ
 
