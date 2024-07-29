@@ -1,4 +1,4 @@
-name: PR Yml
+name: PR Ym
 
 on:
   pull_request:
